@@ -28,9 +28,9 @@
 Test proper sorting operations
 """
 
-import unittest
 from . import TestCase
 import bitmath
+
 
 class TestSorting(TestCase):
     def test_sort_homogeneous_list(self):

@@ -1,0 +1,6 @@
+python-coveralls
+nose
+distribute
+pyflakes
+pep8
+progressbar33

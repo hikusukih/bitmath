@@ -23,39 +23,58 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from __future__ import print_function
+try:
+    from setuptools import setup
+except ImportError:
+    print("Command line script will not be created.")
+    from distutils.core import setup
 
-from distutils.core import setup
 
-pypi_notice = open('.pypi_notice', 'r').read()
+pypi_notice = open('README.rst', 'r').read()
 
-setup(name='bitmath',
-      version='1.0.7-1',
-      description='Pythonic module for representing and manipulating file sizes with different prefix notations.',
-      long_description=pypi_notice,
-      maintainer='Tim Bielawa',
-      maintainer_email='timbielawa@gmail.com',
-      url='https://github.com/tbielawa/bitmath',
-      license='MIT',
-      package_dir={'bitmath': 'bitmath'},
-      packages=['bitmath'],
-      classifiers = [
-          'Development Status :: 5 - Production/Stable',
-          'Environment :: Console',
-          'Intended Audience :: Developers',
-          'Intended Audience :: Information Technology',
-          'Intended Audience :: System Administrators',
-          'Intended Audience :: Telecommunications Industry',
-          'License :: OSI Approved :: MIT License',
-          'Operating System :: MacOS :: MacOS X',
-          'Operating System :: POSIX',
-          'Operating System :: POSIX :: Linux',
-          'Programming Language :: Python',
-          'Topic :: Scientific/Engineering :: Mathematics',
-          'Topic :: Software Development :: Libraries',
-          'Topic :: Software Development :: Libraries :: Python Modules',
-          'Topic :: Software Development :: User Interfaces',
-          'Topic :: System :: Filesystems',
-          'Topic :: Text Processing :: Filters',
-          'Topic :: Utilities'
-      ]
+setup(
+    name='bitmath',
+    version='1.3.1.1',
+    description='Pythonic module for representing and manipulating file sizes with different prefix notations.',
+    long_description=pypi_notice,
+    maintainer='Tim Bielawa',
+    maintainer_email='timbielawa@gmail.com',
+    url='https://github.com/tbielawa/bitmath',
+    license='MIT',
+    package_dir={'bitmath': 'bitmath'},
+    packages=['bitmath'],
+    classifiers = [
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: System Administrators',
+        'Intended Audience :: Telecommunications Industry',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: POSIX',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.1',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python',
+        'Topic :: Scientific/Engineering :: Mathematics',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: User Interfaces',
+        'Topic :: Software Development :: Widget Sets',
+        'Topic :: System :: Filesystems',
+        'Topic :: Text Processing :: Filters',
+        'Topic :: Utilities'
+    ],
+    entry_points = {
+        'console_scripts': [
+            'bitmath = bitmath:cli_script',
+        ],
+    }
 )

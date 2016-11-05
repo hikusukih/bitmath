@@ -24,6 +24,7 @@ Operand  Description
 =======  =======================================
 
 
+.. _getting_started_arithmetic:
 
 Arithmetic
 ==========
@@ -40,8 +41,10 @@ Math works mostly like you expect it to, except for a few edge-cases:
   results may not make much sense.
 
 
-See :ref:`Appendix: Rules for Math <appendix_math>` for a discussion
-of the behavior of bitmath and number types.
+.. seealso::
+
+   :ref:`Appendix: Rules for Math <appendix_math>`
+      For a discussion of the behavior of bitmath and number types.
 
 
 .. _simple_examples_arithmetic_table:
@@ -113,15 +116,11 @@ bitmath supports all arithmetic operations
 .. code-block:: python
    :linenos:
 
-   In [7]: eighty_four_mib = fourty_two_mib + fourty_two_mib_in_kib
-
-   In [8]: eighty_four_mib
-
-   Out[8]: MiB(84.0)
-
-   In [9]: eighty_four_mib == fourty_two_mib * 2
-
-   Out[9]: True
+   >>> eighty_four_mib = fourty_two_mib + fourty_two_mib_in_kib
+   >>> eighty_four_mib
+   MiB(84.0)
+   >>> eighty_four_mib == fourty_two_mib * 2
+   True
 
 
 Unit Conversion
@@ -130,58 +129,47 @@ Unit Conversion
 .. code-block:: python
    :linenos:
 
-   In [1]: from bitmath import *
+   >>> from bitmath import *
+   >>> fourty_two_mib = MiB(42)
+   >>> fourty_two_mib_in_kib = fourty_two_mib.to_KiB()
+   >>> fourty_two_mib_in_kib
+   KiB(43008.0)
 
-   In [2]: fourty_two_mib = MiB(42)
+   >>> fourty_two_mib
+   MiB(42.0)
 
-   In [3]: fourty_two_mib_in_kib = fourty_two_mib.to_KiB()
-
-   In [4]: fourty_two_mib_in_kib
-
-   Out[4]: KiB(43008.0)
-
-   In [5]: fourty_two_mib
-
-   Out[5]: MiB(42.0)
-
+   >>> fourty_two_mib.KiB
+   KiB(43008.0)
 
 Rich Comparison
 ***************
 
 Rich Comparison (as per the `Python Basic Customization
 <https://docs.python.org/2.7/reference/datamodel.html#basic-customization>`_
-magic methods): ``<``, ``≤``, ``==``, ``≠``, ``>``, ``≥`` is fully
+magic methods): ``<``, ``<=``, ``==``, ``!=``, ``>``, ``>=`` is fully
 supported:
 
 .. code-block:: python
    :linenos:
 
-   In [2]: GB(1) < GiB(1)
-   Out[2]: True
-
-   In [3]: GB(1.073741824) == GiB(1)
-   Out[3]: True
-
-   In [4]: GB(1.073741824) <= GiB(1)
-   Out[4]: True
-
-   In [5]: Bit(1) == TiB(bits=1)
-   Out[5]: True
-
-   In [6]: kB(100) > EiB(bytes=1024)
-   Out[6]: True
-
-   In [7]: kB(100) >= EiB.from_other(kB(100))
-   Out[7]: True
-
-   In [8]: kB(100) >= EiB.from_other(kB(99))
-   Out[8]: True
-
-   In [9]: kB(100) >= EiB.from_other(kB(9999))
-   Out[9]: False
-
-   In [10]: KiB(100) != Byte(1)
-   Out[10]: True
+   >>> GB(1) < GiB(1)
+   True
+   >>> GB(1.073741824) == GiB(1)
+   True
+   >>> GB(1.073741824) <= GiB(1)
+   True
+   >>> Bit(1) == TiB(bits=1)
+   True
+   >>> kB(100) > EiB(bytes=1024)
+   True
+   >>> kB(100) >= EiB.from_other(kB(100))
+   True
+   >>> kB(100) >= EiB.from_other(kB(99))
+   True
+   >>> kB(100) >= EiB.from_other(kB(9999))
+   False
+   >>> KiB(100) != Byte(1)
+   True
 
 
 Sorting
@@ -198,29 +186,25 @@ out sorted by increasing magnitude (lines **13** and **14**, and
    :linenos:
    :emphasize-lines: 7,8,13,14,18,19
 
-   In [1]: from bitmath import *
+   >>> from bitmath import *
+   >>> import os
+   >>> sizes = []
+   >>> for f in os.listdir('./tests/'):
+   ...     sizes.append(KiB(os.path.getsize('./tests/' + f)))
 
-   In [2]: import os
-
-   In [3]: sizes = []
-
-   In [4]: for f in os.listdir('./tests/'):
-               sizes.append(KiB(os.path.getsize('./tests/' + f)))
-
-   In [5]: print sizes
+   >>> print sizes
    [KiB(7337.0), KiB(1441.0), KiB(2126.0), KiB(2178.0), KiB(2326.0), KiB(4003.0), KiB(48.0), KiB(1770.0), KiB(7892.0), KiB(4190.0)]
 
-   In [6]: print sorted(sizes)
+   >>> print sorted(sizes)
    [KiB(48.0), KiB(1441.0), KiB(1770.0), KiB(2126.0), KiB(2178.0), KiB(2326.0), KiB(4003.0), KiB(4190.0), KiB(7337.0), KiB(7892.0)]
 
-   In [7]: human_sizes = [s.best_prefix() for s in sizes]
-
-   In [8]: print sorted(human_sizes)
+   >>> human_sizes = [s.best_prefix() for s in sizes]
+   >>> print sorted(human_sizes)
    [KiB(48.0), MiB(1.4072265625), MiB(1.728515625), MiB(2.076171875), MiB(2.126953125), MiB(2.271484375), MiB(3.9091796875), MiB(4.091796875), MiB(7.1650390625), MiB(7.70703125)]
 
 Now print them out in descending magnitude
 
 .. code-block:: python
 
-   In [8]: print sorted(human_sizes, reverse=True)
+   >>> print sorted(human_sizes, reverse=True)
    [KiB(7892.0), KiB(7337.0), KiB(4190.0), KiB(4003.0), KiB(2326.0), KiB(2178.0), KiB(2126.0), KiB(1770.0), KiB(1441.0), KiB(48.0)]

@@ -31,10 +31,9 @@ Reference: http://legacy.python.org/dev/peps/pep-0238/
 """
 
 from __future__ import division
-import unittest
 from . import TestCase
 import bitmath
-from numbers import Number
+
 
 class TestFutureMath(TestCase):
     def test_bitmath_div_bitmath_is_number(self):
@@ -43,7 +42,7 @@ class TestFutureMath(TestCase):
         bm2 = bitmath.KiB(2)
         result = bm1 / bm2
         self.assertEqual(result, 0.5)
-        self.assertIsInstance(result, Number)
+        self.assertIs(type(result), float)
 
     def test_bitmath_div_number_is_bitmath(self):
         """truediv: bitmath / number = bitmath"""
@@ -51,13 +50,20 @@ class TestFutureMath(TestCase):
         num1 = 2
         result = bm1 / num1
         self.assertEqual(result, bitmath.KiB(0.5))
-        self.assertIsInstance(result, bitmath.Byte)
+        self.assertIs(type(result), bitmath.KiB)
 
-    # Disabling this test until https://github.com/tbielawa/bitmath/issues/2 is fixed
     def test_number_div_bitmath_is_number(self):
         """truediv: number / bitmath = number"""
         num1 = 2
         bm1 = bitmath.KiB(1)
         result = num1 / bm1
         self.assertEqual(result, 2.0)
-        self.assertIsInstance(result, Number)
+        self.assertIs(type(result), float)
+
+    def test_number_truediv_bitmath_is_number(self):
+        """truediv: number // bitmath = number"""
+        num1 = 2
+        bm1 = bitmath.KiB(1)
+        result = bm1.__rdiv__(num1)
+        self.assertEqual(result, 2.0)
+        self.assertIs(type(result), float)

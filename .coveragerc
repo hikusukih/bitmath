@@ -1,9 +1,26 @@
+# -*- mode: conf -*-
 [run]
-include = bitmath/__init__.py
+include = bitmath/__init__.py,bitmath/integrations.py
 [report]
 exclude_lines =
     # These should be impossible to trigger.
-    raise ValueError
+    raise ValueError."Invalid value given for 'system' parameter."
+    raise ValueError."Instances mathematical base is an unsupported value
+    raise ValueError."Can't parse string %s into a bitmath object
 
-    # This is for python3 compat only. And py3 is not yet supported
-    long = int
+    # Don't test the __main__ entry point
+    __main__
+
+    # Explicitly label a line as 'do not cover'
+    pragma: no cover
+
+    # Stuff to skip only on Python 2.x. Insert a line like:" # pragma:
+    # PY2X no cover" And export the env var "PYVER" as "PY2X". To skip
+    # certain things on only Py3.x export PYVER as PY3X
+    #
+    # Review: http://nedbatchelder.com/code/coverage/config.html#h_Syntax if you need a refresher
+    #
+    # BTW, the exports happen in the Makefile on lines like (for the 3.x tests):
+    #
+    # 	. $(NAME)env3/bin/activate && export PYVER=PY3X && nosetests-3.3 -v ....
+    pragma: ${PYVER} no cover

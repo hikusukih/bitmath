@@ -15,27 +15,113 @@ Instance Attributes
 
 bitmath objects have several instance attributes:
 
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| Attribute  | Description                                                                                                                  |
-+============+==============================================================================================================================+
-| ``base``   | The mathematical base of the unit of the instance (this will be **2** or **10**)                                             |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``binary`` | The `Python binary representation <https://docs.python.org/2/library/functions.html#bin>`_ of the instance's value (in bits) |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``bin``    | This is an alias for ``binary``                                                                                              |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``bits``   | The number of bits in the object                                                                                             |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``bytes``  | The number of bytes in the object                                                                                            |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``power``  | The mathematical power the ``base`` of the unit of the instance is raised to                                                 |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``system`` | The system of units used to measure this instance (``NIST`` or ``SI``)                                                       |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``value``  | The value of the instance in *prefix* units\ :sup:`1`                                                                        |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``unit``   | The string representation of this prefix unit (such as ``MiB`` or ``kb``)                                                    |
-+------------+------------------------------------------------------------------------------------------------------------------------------+
+.. py:attribute:: BitMathInstance.base
+
+   The mathematical base of the unit of the instance (this will be **2** or **10**)
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.base
+      2
+
+.. py:attribute:: BitMathInstance.binary
+
+   The `Python binary representation
+   <https://docs.python.org/2/library/functions.html#bin>`_ of the
+   instance's value (in bits)
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.binary
+      0b10100111001000
+
+.. py:attribute:: BitMathInstance.bin
+
+   This is an alias for ``binary``
+
+.. py:attribute:: BitMathInstance.bits
+
+   The number of bits in the object
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.bits
+      10696.0
+
+.. py:attribute:: BitMathInstance.bytes
+
+   The number of bytes in the object
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.bytes
+      1337
+
+.. py:attribute:: BitMathInstance.power
+
+   The mathematical power the ``base`` of the unit of the instance is raised to
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.power
+      0
+
+.. py:attribute:: BitMathInstance.system
+
+   The system of units used to measure this instance (``NIST`` or ``SI``)
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.system
+      NIST
+
+.. py:attribute:: BitMathInstance.value
+
+   The value of the instance in *prefix* units\ :sup:`1`
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.value
+      1337.0
+
+.. py:attribute:: BitMathInstance.unit
+
+   The string representation of this prefix unit (such as ``MiB`` or ``kb``)
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.unit
+      Byte
+
+.. py:attribute:: BitMathInstance.unit_plural
+
+   The pluralized string representation of this prefix unit.
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.unit_plural
+      Bytes
+
+.. py:attribute:: BitMathInstance.unit_singular
+
+   The singular string representation of this prefix unit (such as
+   ``MiB`` or ``kb``)
+
+   .. code-block:: python
+
+      >>> b = bitmath.Byte(1337)
+      >>> print b.unit_singular
+      Byte
+
 
 **Notes:**
 
@@ -49,25 +135,21 @@ and what you can expect their printed representation to look like:
 .. code-block:: python
    :linenos:
 
-   In [13]: dvd_capacity = GB(4.7)
-
-   In [14]: print "Capacity in bits: %s\nbytes: %s\n" % \
+   >>> dvd_capacity = GB(4.7)
+   >>> print "Capacity in bits: %s\nbytes: %s\n" % \
                 (dvd_capacity.bits, dvd_capacity.bytes)
 
-      Capacity in bits: 37600000000.0
-      bytes: 4700000000.0
+   Capacity in bits: 37600000000.0
+   bytes: 4700000000.0
 
-   In [15]: dvd_capacity.value
+   >>> dvd_capacity.value
+   4.7
 
-   Out[16]: 4.7
+   >>> dvd_capacity.bin
+   '0b100011000001001000100111100000000000'
 
-   In [17]: dvd_capacity.bin
-
-   Out[17]: '0b100011000001001000100111100000000000'
-
-   In [18]: dvd_capacity.binary
-
-   Out[18]: '0b100011000001001000100111100000000000'
+   >>> dvd_capacity.binary
+   '0b100011000001001000100111100000000000'
 
 
 
@@ -90,35 +172,28 @@ classes. You can even ``to_THING()`` an instance into itself again:
 
 .. code-block:: python
    :linenos:
+   :emphasize-lines: 3,7,12
 
-   In [1]: from bitmath import *
+   >>> from bitmath import *
+   >>> one_mib = MiB(1)
+   >>> one_mib_in_kb = one_mib.to_kb()
+   >>> one_mib == one_mib_in_kb
+   True
 
-   In [2]: one_mib = MiB(1)
+   >>> another_mib = one_mib.to_MiB()
+   >>> print one_mib, one_mib_in_kb, another_mib
+   1.0 MiB 8388.608 kb 1.0 MiB
 
-   In [3]: one_mib_in_kb = one_mib.to_kb()
+   >>> six_TB = TB(6)
+   >>> six_TB_in_bits = six_TB.to_Bit()
+   >>> print six_TB, six_TB_in_bits
+   6.0 TB 4.8e+13 Bit
 
-   In [4]: one_mib == one_mib_in_kb
+   >>> six_TB == six_TB_in_bits
+   True
 
-   Out[4]: True
 
-   In [5]: another_mib = one_mib.to_MiB()
-
-   In [6]: print one_mib, one_mib_in_kb, another_mib
-
-   1.0MiB 8388.608kb 1.0MiB
-
-   In [7]: six_TB = TB(6)
-
-   In [8]: six_TB_in_bits = six_TB.to_Bit()
-
-   In [9]: print six_TB, six_TB_in_bits
-
-   6.0TB 4.8e+13Bit
-
-   In [10]: six_TB == six_TB_in_bits
-
-   Out[10]: True
-
+.. _instances_best_prefix:
 
 best_prefix()
 =============
@@ -163,28 +238,28 @@ even easier to read.
 .. code-block:: python
 
 
-   In [9]: for _rate in tx_rate():
-       print "Rate: %s/second" % Bit(_rate)
-       time.sleep(1)
+   >>> for _rate in tx_rate():
+   ...    print "Rate: %s/second" % Bit(_rate)
+   ...    time.sleep(1)
 
-   Rate: 100.0Bit/sec
-   Rate: 24000.0Bit/sec
-   Rate: 1024.0Bit/sec
-   Rate: 60151.0Bit/sec
-   Rate: 33.0Bit/sec
-   Rate: 9999.0Bit/sec
-   Rate: 9238742.0Bit/sec
-   Rate: 2.09895849555e+13Bit/sec
-   Rate: 934098021.0Bit/sec
-   Rate: 934894.0Bit/sec
+   Rate: 100.0 Bit/sec
+   Rate: 24000.0 Bit/sec
+   Rate: 1024.0 Bit/sec
+   Rate: 60151.0 Bit/sec
+   Rate: 33.0 Bit/sec
+   Rate: 9999.0 Bit/sec
+   Rate: 9238742.0 Bit/sec
+   Rate: 2.09895849555e+13 Bit/sec
+   Rate: 934098021.0 Bit/sec
+   Rate: 934894.0 Bit/sec
 
 And now using a custom formatting definition:
 
 .. code-block:: python
 
-   In [50]: for _rate in tx_rate():
-       print Bit(_rate).best_prefix().format("Rate: {value:.3f} {unit}/sec")
-       time.sleep(1)
+   >>> for _rate in tx_rate():
+   ...    print Bit(_rate).best_prefix().format("Rate: {value:.3f} {unit}/sec")
+   ...    time.sleep(1)
 
    Rate: 12.500 Byte/sec
    Rate: 2.930 KiB/sec
@@ -198,19 +273,13 @@ And now using a custom formatting definition:
    Rate: 114.123 KiB/sec
 
 
-The :py:meth:`format` method also allows you to select a **preferred
-prefix-unit system** for the result.
-
-In the following example we'll make a ``GiB`` instance (this is a NIST
-unit) and then apply :py:meth:`best_prefix` to it.
-
 
 .. _instances_format:
 
 format()
 ========
 
-.. py:method:: format(fmt_spec)
+.. py:method:: BitMathInstance.format(fmt_spec)
 
    Return a custom-formatted string to represent this instance.
 
@@ -223,13 +292,12 @@ bitmath instances come with a verbose built-in string representation:
 
 .. code-block:: python
 
-   In [1]: leet_bits = Bit(1337)
-
-   In [2]: print leet_bits
-   1337.0Bit
+   >>> leet_bits = Bit(1337)
+   >>> print leet_bits
+   1337.0 Bit
 
 However, for instances which aren't whole numbers (as in ``MiB(1/3.0)
-== 0.333333333333MiB``, etc), their representation can be undesirable.
+== 0.333333333333 MiB``, etc), their representation can be undesirable.
 
 The :py:meth:`format` method gives you complete control over the
 instance's representation. All of the :ref:`instances attributes
@@ -258,17 +326,17 @@ First, for reference, the default formatting:
 
 .. code-block:: python
 
-   In [1]: ugly_number = MB(50).to_MiB() / 8.0
-   In [2]: print ugly_number
-   5.96046447754MiB
+   >>> ugly_number = MB(50).to_MiB() / 8.0
+   >>> print ugly_number
+   5.96046447754 MiB
 
 Now, let's use the :py:meth:`format` method to limit that to two
 digits of precision:
 
 .. code-block:: python
 
-   In [3]: print ugly_number.format("{value:.2f}{unit}")
-   5.96MiB
+   >>> print ugly_number.format("{value:.2f}{unit}")
+   5.96 MiB
 
 By changing the **2** character, you increase or decrease the
 precision. Set it to **0** (``{value:.0f}``) and you have what
@@ -283,9 +351,9 @@ of how an attribute may be referenced multiple times.
 
 .. code-block:: python
    :linenos:
-   :emphasize-lines: 4,15
+   :emphasize-lines: 4,16
 
-   In [8]: longer_format = """Formatting attributes for %s
+   >>> longer_format = """Formatting attributes for %s
       ...: This instances prefix unit is {unit}, which is a {system} type unit
       ...: The unit value is {value}
       ...: This value can be truncated to just 1 digit of precision: {value:.1f}
@@ -296,8 +364,8 @@ of how an attribute may be referenced multiple times.
       ...: The instance is {bits} bits large
       ...: bytes/bits without trailing decimals: {bytes:.0f}/{bits:.0f}""" % str(ugly_number)
 
-   In [9]: print ugly_number.format(longer_format)
-   Formatting attributes for 5.96046447754MiB
+   >>> print ugly_number.format(longer_format)
+   Formatting attributes for 5.96046447754 MiB
    This instances prefix unit is MiB, which is a NIST type unit
    The unit value is 5.96046447754
    This value can be truncated to just 1 digit of precision: 6.0
@@ -309,7 +377,42 @@ of how an attribute may be referenced multiple times.
    bytes/bits without trailing decimals: 6250000/50000000
 
 .. note:: On line **4** we print with 1 digit of precision, on line
-          **15** we see the value has been rounded to **6.0**
+          **16** we see the value has been rounded to **6.0**
+
+.. _instances_properties:
+
+Instance Properties
+*******************
+
+THING Properties
+================
+
+Like the :ref:`available classes <classes_available>`, there are 24
+``THING`` properties available. ``THING`` is any of the bitmath
+classes. Under the covers these properties call ``to_THING``.
+
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 3,6,10
+
+   >>> from bitmath import *
+   >>> one_mib = MiB(1)
+   >>> one_mib == one_mib.kb
+   True
+
+   >>> print one_mib, one_mib.kb, one_mib.MiB
+   1.0 MiB 8388.608 kb 1.0 MiB
+
+   >>> six_TB = TB(6)
+   >>> print six_TB, six_TB.Bit
+   6.0 TB 4.8e+13 Bit
+
+   >>> six_TB == six_TB.Bit
+   True
+
+
+
 
 .. _instances_mini_language:
 
@@ -329,7 +432,7 @@ about what's going on here, let's break the first specifier
 (``{value:.2f}``) down into it's component parts::
 
    {value:.2f}
-      ↑  ↑↑↑↑
+      |  |||
       |  |||\---- The "f" says to format this as a floating point type
       |  ||\----- The 2 indicates we want 2 digits of precision (default is 6)
       |  |\------ The '.' character must precede the precision specifier for floats
@@ -342,5 +445,5 @@ given).
 
 .. seealso::
 
-   `Python String Format Cookbook <http://mkaz.com/2012/10/10/python-string-format/>`_
-      `Marcus Kazmierczak’s <http://mkaz.com/>`_ *excellent* introduction to string formatting
+   `Python String Format Cookbook <https://mkaz.tech/python-string-format.html>`_
+      `Marcus Kazmierczak’s <https://mkaz.com/>`_ *excellent* introduction to string formatting

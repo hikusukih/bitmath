@@ -1,5 +1,6 @@
 .. highlight:: python
 
+.. _real_life_examples:
 
 Real Life Examples
 ##################
@@ -21,16 +22,13 @@ as such:
 .. code-block:: python
    :linenos:
 
-   >>> from bitmath import *
-
-   >>> downstream = Mib(50)
-
+   >>> import bitmath
+   >>> downstream = bitmath.Mib(50)
    >>> print downstream.to_MB()
-
    MB(6.25)
 
 This tells us that if our ISP advertises **50Mbps** we can expect to
-see download rates of nearly **6MiB/sec**.
+see download rates of over **6MB/sec**.
 
 1. *Assuming your ISP follows the common industry practice of using SI (base-10) units to describe file sizes/rates*
 
@@ -97,27 +95,45 @@ returns). We can use ``bitmath`` to do that too:
 
 .. code-block:: python
    :linenos:
+   :emphasize-lines: 6
 
    >>> import os
-
    >>> from bitmath import *
-
    >>> these_files = os.listdir('.')
-
    >>> for f in these_files:
    ...    f_size = Byte(os.path.getsize(f))
    ...    print "%s - %s" % (f, f_size.to_KiB())
 
-   test_basic_math.py - 3.048828125KiB
-   __init__.py - 0.1181640625KiB
-   test_representation.py - 0.744140625KiB
-   test_to_Type_conversion.py - 2.2119140625KiB
+   test_basic_math.py - 3.048828125 KiB
+   __init__.py - 0.1181640625 KiB
+   test_representation.py - 0.744140625 KiB
+   test_to_Type_conversion.py - 2.2119140625 KiB
+
+
+Alternatively, we could simplify things and use
+:ref:`bitmath.getsize() <bitmath_getsize>` to read the file size
+directly into a bitmath object:
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 5
+
+   >>> import os
+   >>> import bitmath
+   >>> these_files = os.listdir('.')
+   >>> for f in these_files:
+   ...     print "%s - %s" % (f, bitmath.getsize(f))
+
+   test_basic_math.py - 3.048828125 KiB
+   __init__.py - 0.1181640625 KiB
+   test_representation.py - 0.744140625 KiB
+   test_to_Type_conversion.py - 2.2119140625 KiB
+
 
 .. seealso::
 
    :ref:`Instance Formatting <instances_format>`
       How to print results in a *prettier* format
-
 
 
 Calculating Linux BDP and TCP Window Scaling
@@ -361,3 +377,55 @@ Set the **per-socket** buffer sizes:
 And it's done! Testing this is left as an exercise for the
 reader. Note that in my experience this is less useful on wireless
 connections.
+
+
+.. _real_life_examples_download_progress_bars:
+
+Creating Download Progress Bars
+*******************************
+
+
+.. literalinclude:: ../../full_demo.py
+
+* View the the source for the `demo suite
+  <https://raw.githubusercontent.com/tbielawa/bitmath/master/full_demo.py>`_
+  on GitHub
+
+
+.. _real_life_examples_read_device_storage_capacity:
+
+Reading a Devices Storage Capacity
+**********************************
+
+
+.. include:: query_device_capacity_warning.rst
+
+Using :func:`bitmath.query_device_capacity` we can read the size of a
+storage device or a partition on a device.
+
+.. include:: example_block_devices.rst
+
+Usage is fairly straight-forward. Create an open file handle of the
+device you want to read the capacity of and then create a bitmath
+object with the ``query_device_capacity`` function. Here's an example
+where we read the capacity of device ``sda``, the first device on the
+example system.
+
+.. code-block:: python
+
+   >>> import bitmath
+   >>> fh = open('/dev/sda', 'r')
+   >>> sda_capacity = bitmath.query_device_capacity(fh)
+   >>> fh.close()
+   >>> print sda_capacity.best_prefix()
+   238.474937439 GiB
+
+We can simplify this so that the file handle is automatically closed
+for us by using the ``with`` context manager.
+
+.. code-block:: python
+
+   >>> with open('/dev/sda', 'r') as fh:
+   ...     sda_capacity = bitmath.query_device_capacity(fh)
+   >>> print sda_capacity.best_prefix()
+   238.474937439 GiB
